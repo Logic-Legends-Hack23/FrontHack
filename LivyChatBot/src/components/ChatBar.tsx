@@ -76,7 +76,9 @@ export default function ChatBar() {
   const [selectedImage, setSelectedImage] = useState(null);
   const [isFormVisible, setIsFormVisible] = useState(false);
   const [selectedDateTime, setSelectedDateTime] = useState(null);
-  const [car, setCar] = useState(''); // Initialize with an empty string or the default car model
+  const [car, setCar] = useState(''); 
+  const [showIntroText, setShowIntroText] = useState(true);
+
 
 
   const handleMessageChange = (event) => {
@@ -85,6 +87,9 @@ export default function ChatBar() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    if (showIntroText) {
+      setShowIntroText(false); 
+    }
   
     const isImage = selectedImage !== null;
     console.log(isImage);
@@ -160,9 +165,6 @@ export default function ChatBar() {
   
       if (livyResponse === 'Activa') {
         setIsFormVisible(true);
-      } else if (livyResponse.trim() == '') {
-        setIsFormVisible(false);
-        setLivyMessages([...livyMessages, { text: '¿En qué puedo ayudarte?', sentByUser: false }]);
       } else {
         setIsFormVisible(false);
         setLivyMessages([...livyMessages, { text: livyResponse, sentByUser: false }]);
@@ -219,6 +221,8 @@ export default function ChatBar() {
     fontFamily: 'Inter, sans-serif',
     float: 'right',
     clear: 'both',
+    maxWidth: '50%'
+    
   };
 
   const livyMessageStyle = {
@@ -229,6 +233,7 @@ export default function ChatBar() {
     fontFamily: 'Inter, sans-serif',
     float: 'left',
     clear: 'both',
+    maxWidth: '50%'
   };
 
   const combinedMessages = [];
@@ -249,6 +254,11 @@ export default function ChatBar() {
 
     return (
       <div style={{ position: 'fixed', bottom: '2rem', right: '2rem', left: '2rem', width: 'calc(100% - 4rem)', height: 'calc(80vh - 4rem)', display: 'flex', flexDirection: 'column' }}>
+        {showIntroText && ( // Mostrar el fondo de texto si showIntroText es true
+        <div style={{ fontSize: '8rem', color: 'rgba(128, 128, 128, 0.3)', marginBottom: '1rem', textAlign: 'center' }}>
+          Soy Livy, ¿Qué puedo hacer por ti?
+        </div>
+      )}
         <div style={{ backgroundColor: 'white', padding: '3rem', flex: 1, overflowY: 'auto', borderRadius: '1rem' }}>
           <div style={{ backgroundColor: 'white', padding: '1rem' }}>
             {combinedMessages.map((msg, index) => (
@@ -256,7 +266,7 @@ export default function ChatBar() {
                 <div style={msg.sentByUser ? userMessageStyle : livyMessageStyle}>
                   {msg.sentByUser && (
                     <div style={{ float: 'right', marginRight: '0.5rem' }}>
-                      {!msg.isCalendarActive && msg.image && <img src={URL.createObjectURL(msg.image)} alt="User Image" style={{ maxWidth: '100%', height: 'auto' }} />}
+                      {!msg.isCalendarActive && msg.image && <img src={URL.createObjectURL(msg.image)} alt="User Image" style={{ maxWidth: '50%', height: 'auto', marginTop: '1rem'}} />}
                       {!msg.isCalendarActive && <div style={{ float: 'right', marginLeft: '0.5rem' }}>
                         <PersonIcon />
                       </div>}
@@ -266,7 +276,7 @@ export default function ChatBar() {
                   {!msg.sentByUser && (
                     <div style={{ float: 'left', marginRight: '0.5rem' }}>
                       <div style={{ width: '30px', height: '30px', borderRadius: '50%', overflow: 'hidden' }}>
-                        <img src={logoLL} alt="Livy" style={{ maxWidth: '100%', height: 'auto' }} />
+                        <img src={logoLL} alt="Livy" style={{ maxWidth: '50%', height: 'auto' }} />
                       </div>
                     </div>
                   )}
@@ -288,7 +298,6 @@ export default function ChatBar() {
         <label htmlFor="imageInput" style={{ backgroundColor: 'rgba(225, 0, 152, 0.18)', borderRadius: '1rem', padding: '1rem', cursor: 'pointer', border: '2px solid black' }}>
           <CameraAltIcon />
         </label>
-
           <input
             type="file"
             id="imageInput"
@@ -300,12 +309,11 @@ export default function ChatBar() {
               }
             }}
           />
-         <img
+          <img
           src={selectedImage && URL.createObjectURL(selectedImage)}
           alt="Image Preview"
           style={{ float: 'none', marginLeft: '0.5rem', maxWidth: '20%', height: '20%', display: selectedImage ? 'block' : 'none' }}
         />   
-          
           <input
             type="text"
             value={message}
@@ -319,4 +327,4 @@ export default function ChatBar() {
         </form>
       </div>
     );
-}  
+}    

@@ -8,7 +8,6 @@ import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import MoreIcon from '@mui/icons-material/MoreVert';
 import logoImage from '../images/livwhite.png';
-import { Button, Popover } from '@mui/material';
 
 const StyledToolbar = styled(Toolbar)(({ theme }) => ({
   display: 'flex',
@@ -23,19 +22,24 @@ const appBarStyles = {
   backgroundColor: "#E10098",
 };
 
+const infoTextStyle = {
+  padding: '1rem 2rem', // Padding en los lados
+  backgroundColor: 'rgba(225, 0, 152, 0.18)', // Fondo rosado
+  borderRadius: '0.5rem',
+  boxShadow: '0 2px 4px rgba(225, 0, 152, 0.3)', // Sombra
+  fontSize: '2rem', // Tamaño de fuente más grande
+  textAlign: 'center', // Texto centrado
+  margin: '0 auto', // Centrar horizontalmente
+  width: '50%', // Ancho del contenedor
+  height: 'auto', // Altura ajustable
+};
+
 export default function TopBar() {
-  const [anchorEl, setAnchorEl] = useState(null);
+  const [showInfoText, setShowInfoText] = useState(false);
 
-  const handlePopoverOpen = (event) => {
-    setAnchorEl(event.currentTarget);
+  const toggleInfoText = () => {
+    setShowInfoText(!showInfoText);
   };
-
-  const handlePopoverClose = () => {
-    setAnchorEl(null);
-  };
-
-  const open = Boolean(anchorEl);
-  const id = open ? 'simple-popover' : undefined;
 
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -43,42 +47,11 @@ export default function TopBar() {
         <StyledToolbar>
           <img src={logoImage} alt="falta" height="40" />
           <div id="BDY-text">BYD</div>
-          <div id= "chatlivy">
-            <div id="livy-text" >Livy</div>
-            <div id="chatbot-text" >ChatBot</div>
+          <div id="chatlivy">
+            <div id="livy-text">Livy</div>
+            <div id="chatbot-text">ChatBot</div>
           </div>
           <Typography variant="h5" noWrap component="div" sx={{ flexGrow: 1, alignSelf: 'flex-end' }} />
-          <div
-            onMouseEnter={handlePopoverOpen}
-            onMouseLeave={handlePopoverClose}
-          >
-            <IconButton
-              size="large"
-              aria-label="display more actions"
-              edge="end"
-              color="inherit"
-              aria-owns={open ? 'mouse-over-popover' : undefined}
-              aria-haspopup="true"
-            >
-              <MoreIcon />
-            </IconButton>
-          </div>
-          <Popover
-            id={id}
-            open={open}
-            anchorEl={anchorEl}
-            onClose={handlePopoverClose}
-            anchorOrigin={{
-              vertical: 'bottom',
-              horizontal: 'center',
-            }}
-            transformOrigin={{
-              vertical: 'top',
-              horizontal: 'center',
-            }}
-          >
-            <div>¡Hola! Soy un popover de ejemplo.</div>
-          </Popover>
         </StyledToolbar>
       </AppBar>
     </Box>
