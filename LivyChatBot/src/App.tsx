@@ -1,5 +1,5 @@
 import React from 'react';
-import Calendar from './Calendar'; 
+import Calendar from './components/Calendar'; 
 import TopBar from './components/TopBar';
 import ChatBar from './components/ChatBar';
 

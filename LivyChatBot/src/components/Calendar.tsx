@@ -13,7 +13,7 @@ const fivePM = dayjs().set('hour', 17).startOf('hour');
 
 
 
-export default function ValidationBehaviorView() {
+export default function ValidationBehaviorView({ onDateTimeSelect }) {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <Grid
@@ -24,11 +24,25 @@ export default function ValidationBehaviorView() {
         justifyContent="center"
       >
         <Grid item>
-          <DateCalendar defaultValue={tomorrow} disablePast/>
+          <DateCalendar
+            value={selectedDate}
+            onChange={(newDate) => {
+              setSelectedDate(newDate);
+              onDateTimeSelect(formatSelectedDateTime(newDate, selectedTime));
+            }}
+            disablePast
+          />
         </Grid>
         <Grid item>
-          <TimeClock defaultValue={twelvePM} maxTime={fivePM}
-          minutesStep={15} />
+          <TimeClock
+            value={selectedTime}
+            onChange={(newTime) => {
+              setSelectedTime(newTime);
+              onDateTimeSelect(formatSelectedDateTime(selectedDate, newTime));
+            }}
+            maxTime={fivePM}
+            minutesStep={15}
+          />
         </Grid>
       </Grid>
     </LocalizationProvider>
