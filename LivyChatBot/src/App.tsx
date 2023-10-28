@@ -1,4 +1,5 @@
 import React from 'react';
+import Calendar from './Calendar'; 
 import TopBar from './components/TopBar';
 import ChatBar from './components/ChatBar';
 
