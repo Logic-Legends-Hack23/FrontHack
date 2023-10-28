@@ -140,7 +140,12 @@ export default function ChatBar() {
               setSelectedImage(event.target.files[0]);
             }
           }}
-        />    
+        /> 
+        <img
+          src={selectedImage && URL.createObjectURL(selectedImage)}
+          alt="Image Preview"
+          style={{ float: 'none', marginLeft: '0.5rem', maxWidth: '20%', height: '20%', display: selectedImage ? 'block' : 'none' }}
+        />   
         <input
           type="text"
           value={message}
