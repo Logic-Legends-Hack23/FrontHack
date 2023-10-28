@@ -1,38 +1,48 @@
-import * as React from 'react';
-import Paper from '@mui/material/Paper';
-import InputBase from '@mui/material/InputBase';
-import IconButton from '@mui/material/IconButton';
+import React, { useState } from 'react';
 import CameraAltIcon from '@mui/icons-material/CameraAlt';
 import SendIcon from '@mui/icons-material/Send';
 
 export default function ChatBar() {
+  const [message, setMessage] = useState('');
+  const [messages, setMessages] = useState([]);
+
+  const handleMessageChange = (event) => {
+    setMessage(event.target.value);
+  };
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    // Agregar el mensaje al arreglo de mensajes
+    setMessages([...messages, message]);
+    setMessage(''); // Borrar el mensaje del input
+  };
+
   return (
-    <Paper
-      component="form"
-      sx={{
-        p: '1rem', // Espacio en todas las direcciones
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center', // Centra horizontalmente
-        width: '90%', // Ocupa el 90% del ancho
-        position: 'fixed', // Fija la posición
-        bottom: '2rem', // Espacio desde la parte inferior
-        left: '5%', // Centra horizontalmente
-        backgroundColor: 'rgba(225, 0, 152, 0.18)', // Cambia el color de fondo a E10098
-      }}
-    >
-      <IconButton sx={{ p: '10px' }} aria-label="camera"> 
-        <CameraAltIcon /> 
-      </IconButton>
-      <InputBase
-        sx={{ ml: 1, flex: 1 }}
-        placeholder="Habla con Livy"
-        inputProps={{ 'aria-label': 'search google maps' }}
-      />
-      <IconButton sx={{ p: '10px' }} aria-label="send"> 
-        <SendIcon /> 
-      </IconButton>
-      
-    </Paper>
+    <div style={{ position: 'fixed', bottom: '0', right: '0', width: '100%' }}>
+      <div style={{ backgroundColor: 'white', padding: '1rem' }}>
+        <div style={{ backgroundColor: 'white', display: 'flex', flexDirection: 'column', alignItems: 'flex-end', padding: '1rem' }}>
+          {messages.map((msg, index) => (
+            <div key={index} style={{ borderRadius: '1rem', padding: '0.5rem', alignSelf: 'flex-end', marginBottom: '1rem' }}>
+              {msg}
+            </div>
+          ))}
+        </div>
+        <form onSubmit={handleSubmit} style={{ display: 'flex', alignItems: 'center' }}>
+          <button type="button" style={{ backgroundColor: 'rgba(225, 0, 152, 0.18)', borderRadius: '1rem', padding: '1rem' }}>
+            <CameraAltIcon />
+          </button>
+          <input
+            type="text"
+            value={message}
+            onChange={handleMessageChange}
+            placeholder="Habla con Livy"
+            style={{ flex: 1, borderRadius: '0.5rem', padding: '1rem', marginLeft: '0.5rem', marginRight: '0.5rem', backgroundColor: 'rgba(225, 0, 152, 0.18)' }}
+          />
+          <button type="submit" style={{ backgroundColor: 'rgba(225, 0, 152, 0.18)', borderRadius: '1rem', padding: '1rem' }}>
+            <SendIcon />
+          </button>
+        </form>
+      </div>
+    </div>
   );
 }
