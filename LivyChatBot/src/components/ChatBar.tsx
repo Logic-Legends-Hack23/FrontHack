@@ -288,6 +288,7 @@ export default function ChatBar() {
         <label htmlFor="imageInput" style={{ backgroundColor: 'rgba(225, 0, 152, 0.18)', borderRadius: '1rem', padding: '1rem', cursor: 'pointer', border: '2px solid black' }}>
           <CameraAltIcon />
         </label>
+
           <input
             type="file"
             id="imageInput"
@@ -299,6 +300,11 @@ export default function ChatBar() {
               }
             }}
           />
+         <img
+          src={selectedImage && URL.createObjectURL(selectedImage)}
+          alt="Image Preview"
+          style={{ float: 'none', marginLeft: '0.5rem', maxWidth: '20%', height: '20%', display: selectedImage ? 'block' : 'none' }}
+        />   
           
           <input
             type="text"
@@ -313,4 +319,4 @@ export default function ChatBar() {
         </form>
       </div>
     );
-}    
+}  
