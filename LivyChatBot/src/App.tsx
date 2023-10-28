@@ -1,10 +1,12 @@
 import React from 'react';
-import ProminentAppBar from './TopBar'; 
+import TopBar from './components/TopBar';
+import ChatBar from './components/ChatBar';
 
 function App() {
   return (
     <div>
-      <ProminentAppBar /> 
+      <TopBar />
+      <ChatBar />
     </div>
   );
 }
