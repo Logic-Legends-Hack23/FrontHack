@@ -19,25 +19,46 @@ export default function ChatBar() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    // Agregar el mensaje del usuario al arreglo de mensajes de usuario
-    setUserMessages([...userMessages, { text: message, sentByUser: true }]);
-    setMessage(''); 
+  
+    const isImage = selectedImage !== null;
+  
+    // Construir la URL en función del tipo de contenido
+    const apiUrl = isImage
+      ? ''
+      : '';
+  
+    // Crear el encabezado 'Content-Type' en función del tipo de contenido
+    const headers = isImage
+      ? { 'Content-Type': 'multipart/form-data' }
+      : { 'Content-Type': 'application/json' };
+  
+    // Si es una imagen, agrega la imagen como un mensaje de usuario
+    if (isImage) {
+      setUserMessages([...userMessages, { image: selectedImage, sentByUser: true }]);
+      setSelectedImage(null); // Restablecer la imagen seleccionada
+    } else {
+      setUserMessages([...userMessages, { text: message, sentByUser: true }]);
+      setMessage('');
+    }
+  
     try {
       const response = await axios.post(
-        'http://10.48.206.1:8000/text/',
-        { text: message },
+        apiUrl, // Usar la URL construida
+        isImage ? formData : { text: message }, // Enviar formData o un objeto JSON según el tipo de contenido
         {
-          headers: { 'Content-Type': 'application/json' },
+          headers: headers, // Usar el encabezado adecuado
           withCredentials: false,
         }
       );
-    
-      const livyResponse = response.data.response; // Accede a la propiedad "response" para obtener el valor de texto
+  
+      const livyResponse = response.data.response;
       setLivyMessages([...livyMessages, { text: livyResponse, sentByUser: false }]);
     } catch (error) {
       console.error('Error en la solicitud a la API:', error);
     }
   };
+  
+  
 
   // Combina los mensajes del usuario y de Livy para mostrarlos intercalados
   const combinedMessages = [];
@@ -82,41 +103,44 @@ export default function ChatBar() {
     <div style={{ position: 'fixed', bottom: '2rem', right: '2rem', left: '2rem', width: 'calc(100% - 4rem)', height: 'calc(80vh - 4rem)', display: 'flex', flexDirection: 'column' }}>
       <div style={{ backgroundColor: 'white', padding: '1rem', flex: 1, overflowY: 'auto', borderRadius: '1rem' }}>
         <div style={{ backgroundColor: 'white', padding: '1rem' }}>
-        {combinedMessages.map((msg, index) => (
-          <div key={index} style={{ marginBottom: '1rem' }}>
-            <div style={msg.sentByUser ? userMessageStyle : livyMessageStyle}>
-              {msg.sentByUser && (
-                <div style={{ float: 'right', marginLeft: '0.5rem' }}>
-                  <PersonIcon />
-                </div>
-              )}
-              {msg.text}
-              {!msg.sentByUser && (
-                <div style={{ float: 'left', marginRight: '0.5rem' }}>
-                  <ReplyIcon />
-                </div>
-              )}
+          {combinedMessages.map((msg, index) => (
+            <div key={index} style={{ marginBottom: '1rem' }}>
+              <div style={msg.sentByUser ? userMessageStyle : livyMessageStyle}>
+                {msg.sentByUser && (
+                  <div>
+                    {msg.image && <img src={URL.createObjectURL(msg.image)} alt="User Image" style={{ maxWidth: '100%', height: 'auto' }} />}
+                    <div style={{ float: 'right', marginLeft: '0.5rem' }}>
+                      <PersonIcon />
+                    </div>
+                  </div>
+                )}
+                {msg.text}
+                {!msg.sentByUser && (
+                  <div style={{ float: 'left', marginRight: '0.5rem' }}>
+                    <ReplyIcon />
+                  </div>
+                )}
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
           <div ref={messagesEndRef}></div>
         </div>
       </div>
       <form onSubmit={handleSubmit} style={{ display: 'flex', alignItems: 'center', marginTop: '1rem' }}>
-      <label htmlFor="imageInput" style={{ backgroundColor: 'rgba(225, 0, 152, 0.18)', borderRadius: '1rem', padding: '1rem', cursor: 'pointer' }}>
-        <CameraAltIcon />
-      </label>
-      <input
-        type="file"
-        id="imageInput"
-        accept="image/*" 
-        style={{ display: 'none' }}
-        onChange={(event) => {
-          if (event.target.files.length > 0) {
-            setSelectedImage(event.target.files[0]);
-          }
-        }}
-      />    
+        <label htmlFor="imageInput" style={{ backgroundColor: 'rgba(225, 0, 152, 0.18)', borderRadius: '1rem', padding: '1rem', cursor: 'pointer' }}>
+          <CameraAltIcon />
+        </label>
+        <input
+          type="file"
+          id="imageInput"
+          accept="image/*" 
+          style={{ display: 'none' }}
+          onChange={(event) => {
+            if (event.target.files.length > 0) {
+              setSelectedImage(event.target.files[0]);
+            }
+          }}
+        />    
         <input
           type="text"
           value={message}
